@@ -1,0 +1,10 @@
+# Secrets
+config.php
+
+# Runtime state written by the bot
+data/
+step/
+
+# OS / editor cruft
+.DS_Store
+*.log
