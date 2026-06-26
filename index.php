@@ -170,6 +170,15 @@ function bot($method, $data = [])
 }
 
 $alijonov = json_decode(file_get_contents('php://input'));
+
+// Acknowledge Telegram immediately so it does not retry the update
+// (prevents duplicate processing / repeated "ulandi" messages).
+ignore_user_abort(true);
+if (function_exists('fastcgi_finish_request')) {
+    http_response_code(200);
+    fastcgi_finish_request();
+}
+
 $message = $alijonov->message;
 $cid = $message->chat->id;
 $name = $message->chat->first_name;
@@ -435,17 +444,6 @@ if(isset($alijonov)){
 ]);
 }
 */
-
-if (isset($alijonov)) {
-    if (!areBusinessUpdatesAllowed(BOT_TOKEN)) {
-        bot('sendMessage', [
-            'chat_id' => $chat_id,
-            'text' => "<tg-emoji emoji-id='5447644880824181073'>⚠️</tg-emoji> <i><b>Diqqat!</b> Botingiz eski va ba'zi xabar turlari ishlamayapti. Iltimos, webhook'ni yangilang, aks holda ba’zi funksiyalar ishlamaydi.</i>",
-            'parse_mode' => 'html',
-        ]);
-        exit;
-    }
-}
 
 if (isset($connection)) {
 
